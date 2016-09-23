@@ -35,10 +35,12 @@
 #define PrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
-#include "G4ParticleGun.hh"
 #include "globals.hh"
 
+class G4GeneralParticleSource;
 class G4Event;
+
+class PrimaryGeneratorMessenger;
 class DetectorConstruction;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -52,10 +54,36 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   public:
     void GeneratePrimaries(G4Event*);
     G4ParticleGun* GetParticleGun() {return particleGun;};
+    void SetsigmaEnergy(G4double);
+  void SetmeanKineticEnergy(G4double);
+  void GeneratePrimaries(G4Event*);
+  void SetXposition(G4double);
+  void SetYposition(G4double);
+  void SetZposition(G4double);
+  void SetsigmaY(G4double);
+  void SetsigmaZ(G4double);
+  void SetsigmaMomentumY(G4double);
+  void SetsigmaMomentumZ(G4double);
+  G4double GetmeanKineticEnergy(void);
+  G4double GetSigmaEnergy(void);
+  
 
   private:
-    G4ParticleGun*        particleGun;
-    DetectorConstruction* detector;
+  void SetDefaultPrimaryParticle();
+  G4double meanKineticEnergy;
+  G4double sigmaEnergy;
+  G4double X0;
+  G4double Y0;
+  G4double Z0;
+  G4double sigmaX;
+  G4double sigmaY;
+  G4double sigmaZ;
+  G4double sigmaMomentumY;
+  G4double sigmaMomentumZ;
+
+  private:
+  G4GeneralParticleSource* particleGun;
+  DetectorConstruction* detector;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -32,25 +32,34 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "PrimaryGeneratorAction.hh"
+#include "PrimaryGeneratorMessenger.hh"
 
 #include "DetectorConstruction.hh"
+#include "G4ParticleGun.hh"
+#include "G4GeneralParticleSource.hh"
 
 #include "G4Event.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
+#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det)
 :detector(det)                                               
 {
-  particleGun  = new G4ParticleGun(1);
+  particleGun  = new G4GeneralParticleSource();
   G4ParticleDefinition* particle
            = G4ParticleTable::GetParticleTable()->FindParticle("e-");
   particleGun->SetParticleDefinition(particle);
   particleGun->SetParticleEnergy(10*MeV);    
   particleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  G4double halfSize = 0.5*(detector->GetWorldSize());
+  G4double z0 = - halfSize;
+  
+  particleGun->SetParticlePosition(G4ThreeVector(0., 0., z0));
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -64,12 +73,6 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  //this function is called at the begining of event
-  //
-  G4double halfSize = 0.5*(detector->GetWorldSize());
-  G4double z0 = - halfSize;
-  
-  particleGun->SetParticlePosition(G4ThreeVector(0., 0., z0));
   particleGun->GeneratePrimaryVertex(anEvent);
 }
 
